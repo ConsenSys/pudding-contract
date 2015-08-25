@@ -273,6 +273,9 @@
           ref = contract_class.abi;
           for (i = 0, len = ref.length; i < len; i++) {
             abi_object = ref[i];
+            if (abi_object.constant) {
+              continue;
+            }
             fn_name = abi_object.name;
             fn = instance[fn_name];
             if (fn == null) {

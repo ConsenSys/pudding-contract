@@ -240,6 +240,9 @@ factory = (Promise, web3) ->
 
       synchronize = (instance) ->
         for abi_object in contract_class.abi
+          
+          continue if abi_object.constant
+
           fn_name = abi_object.name
           fn = instance[fn_name]
 
