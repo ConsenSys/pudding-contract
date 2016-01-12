@@ -15,7 +15,8 @@
     "bluebird": "*",
     "rimraf": "*",
     "node-dir": "*",
-    "babel": "*"
+    "babel": "*",
+    "babel-core": "*"
   },
   "license": "MIT License. Copyright Consensys LLC, and authors. All rights reserved."
 }
