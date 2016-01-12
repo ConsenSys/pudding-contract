@@ -1,7 +1,7 @@
 var fs = require("fs");
 var path = require("path");
 var rimraf = require("rimraf");
-var babel = require("babel");
+var babel = require("babel-core");
 var class_template = fs.readFileSync(path.join(__dirname, "./classtemplate.es6"), {encoding: "utf8"});
 
 // TODO: This should probably be asynchronous.
@@ -27,7 +27,6 @@ module.exports = {
       classfile = classfile.replace(/\{\{BINARY\}\}/g, contract_data.binary || "");
       classfile = classfile.replace(/\{\{ABI\}\}/g, JSON.stringify(contract_data.abi));
       classfile = classfile.replace(/\{\{ADDRESS\}\}/g, contract_data.address || "");
-      classfile = classfile.replace(/\{\{PUDDING_VERSION\}\}/g, Pudding.version);
 
       classfile = babel.transform(classfile).code;
 
