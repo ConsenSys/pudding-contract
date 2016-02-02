@@ -13,6 +13,6 @@ Package.onUse(function(api) {
 
   api.export(['Pudding'], ['client']);
   
-  api.add_files('build/ether-pudding.js', 'client');
+  api.add_files('dist/ether-pudding.js', 'client');
   api.add_files('package-init.js', 'client');
 });

@@ -226,7 +226,7 @@ npm install -g webpack
 Then build: 
 
 ```
-$ wepback
+$ webpack
 ```
 
 ### Running Tests
