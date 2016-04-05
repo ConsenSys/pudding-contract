@@ -48,7 +48,7 @@ var Pudding = require("ether-pudding");
 Pudding.setWeb3(web3);
 
 // Set the provider, as you would normally. 
-web3.setProvider(new Web3.Providers.HttpProvider("http://localhost:8545"));
+web3.setProvider(new Web3.providers.HttpProvider("http://localhost:8545"));
 
 var MyContract = Pudding.whisk({
   abi: abi, 
