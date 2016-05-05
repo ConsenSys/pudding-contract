@@ -1,3 +1,4 @@
+[![Stories in Ready](https://badge.waffle.io/ConsenSys/ether-pudding.png?label=ready&title=Ready)](https://waffle.io/ConsenSys/ether-pudding)
 **UPGRADE WARNING:** When upgrading to `ether-pudding` v2.x from v1.x, make sure to upgrade any saved `.sol.js` files, especially those in production. [More details here.](https://github.com/ConsenSys/ether-pudding/wiki/Upgrading-from-1.x-to-2.x)
 
 -----------------------------
