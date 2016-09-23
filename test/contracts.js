@@ -34,7 +34,7 @@ describe("Pudding + require", function() {
     // Setup
     provider = TestRPC.provider();
     web3 = new Web3();
-    web3.setProvider(provider)
+    web3.setProvider(provider);
 
     var dirPath = temp.mkdirSync({
       dir: path.resolve("./"),
@@ -49,7 +49,7 @@ describe("Pudding + require", function() {
       address: "0xe6e1652a0397e078f434d6dda181b218cfd42e01"
     }, filepath).then(function() {
       Example = requireNoCache(filepath);
-      Example.setProvider(provider)
+      Example.setProvider(provider);
 
       // Opt into next_gen
       Example.next_gen = true;
@@ -151,7 +151,7 @@ describe("Pudding + require", function() {
       // BigNumber passed in a call.
       return example.parrot.call(web3.toBigNumber(865));
     }).then(function(parrot_value) {
-      assert.equal(parrot_value.valueOf(), 865, "Parrotted value should equal 865")
+      assert.equal(parrot_value.valueOf(), 865, "Parrotted value should equal 865");
     }).then(done).catch(done);
   });
 
