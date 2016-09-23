@@ -59,7 +59,7 @@ module.exports = {
           if (item.type != "event") return;
 
           var signature = item.name + "(" + item.inputs.map(function(param) {return param.type;}).join(",") + ")";
-          network.events["0x" + web3.sha3(signature)] = item;
+          network.events[ web3.sha3(signature)] = item;
         });
 
         // Remove legacy key

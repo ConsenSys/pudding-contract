@@ -180,7 +180,7 @@ var SolidityEvent = require("web3/lib/web3/event.js");
     instance.allEvents = contract.allEvents;
     instance.address = contract.address;
     instance.transactionHash = contract.transactionHash;
-  };
+  }
 
   // Use inheritance to create a clone of this contract,
   // and copy over contract's static functions.
@@ -194,7 +194,7 @@ var SolidityEvent = require("web3/lib/web3/event.js");
     temp.prototype = Object.create(fn.prototype);
     bootstrap(temp);
     return temp;
-  };
+  }
 
   function bootstrap(fn) {
     fn.web3 = new Web3();
@@ -205,7 +205,7 @@ var SolidityEvent = require("web3/lib/web3/event.js");
     fn.setNetwork("default");
     fn.network_id = null;
     return fn;
-  };
+  }
 
   // Accepts a contract object created with web3.eth.contract.
   // Optionally, if called without `new`, accepts a network_id and will
@@ -219,7 +219,7 @@ var SolidityEvent = require("web3/lib/web3/event.js");
       C.setNetwork(network_id);
       return C;
     }
-  };
+  }
 
   Contract.currentProvider = null;
 
@@ -379,7 +379,7 @@ var SolidityEvent = require("web3/lib/web3/event.js");
 
       self.setNetwork(network_id);
       callback();
-    })
+    });
   };
 
   Contract.setNetwork = function(network_id) {
