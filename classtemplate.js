@@ -8,7 +8,7 @@ var SolidityEvent = require("web3/lib/web3/event.js");
   }
 
   Provider.prototype.send = function() {
-    this.provider.send.apply(this.provider, arguments);
+    return this.provider.send.apply(this.provider, arguments);
   };
 
   Provider.prototype.sendAsync = function() {
