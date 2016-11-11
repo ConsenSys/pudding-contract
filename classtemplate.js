@@ -1,27 +1,27 @@
 var Web3 = require("web3");
 var SolidityEvent = require("web3/lib/web3/event.js");
 
-(function () {
+(function() {
   // Planned for future features, logging, etc.
   function Provider(provider) {
     this.provider = provider;
   }
 
-  Provider.prototype.send = function () {
+  Provider.prototype.send = function() {
     return this.provider.send.apply(this.provider, arguments);
   };
 
-  Provider.prototype.sendAsync = function () {
+  Provider.prototype.sendAsync = function() {
     this.provider.sendAsync.apply(this.provider, arguments);
   };
 
   var BigNumber = (new Web3()).toBigNumber(0).constructor;
 
   var Utils = {
-    is_object: function (val) {
+    is_object: function(val) {
       return typeof val == "object" && !Array.isArray(val);
     },
-    is_big_number: function (val) {
+    is_big_number: function(val) {
       if (typeof val != "object") return false;
 
       // Instanceof won't work because we have multiple versions of Web3.
@@ -32,7 +32,7 @@ var SolidityEvent = require("web3/lib/web3/event.js");
         return false;
       }
     },
-    merge: function () {
+    merge: function() {
       var merged = {};
       var args = Array.prototype.slice.call(arguments);
 
@@ -48,8 +48,8 @@ var SolidityEvent = require("web3/lib/web3/event.js");
 
       return merged;
     },
-    decodeLogs: function (C, instance, logs) {
-      return logs.map(function (log) {
+    decodeLogs: function(C, instance, logs) {
+      return logs.map(function(log) {
         var logABI = C.events[log.topics[0]];
 
         if (logABI == null) {
@@ -58,13 +58,13 @@ var SolidityEvent = require("web3/lib/web3/event.js");
 
         var decoder = new SolidityEvent(null, logABI, instance.address);
         return decoder.decode(log);
-      }).filter(function (log) {
+      }).filter(function(log) {
         return log != null;
       });
     },
-    promisifyFunction: function (fn, C) {
+    promisifyFunction: function(fn, C) {
       var self = this;
-      return function () {
+      return function() {
         var instance = this;
 
         var args = Array.prototype.slice.call(arguments);
@@ -78,9 +78,9 @@ var SolidityEvent = require("web3/lib/web3/event.js");
 
         tx_params = Utils.merge(C.class_defaults, tx_params);
 
-        return C.detectNetwork().then(function (network_id) {
-          return new Promise(function (accept, reject) {
-            var callback = function (error, result) {
+        return C.detectNetwork().then(function(network_id) {
+          return new Promise(function(accept, reject) {
+            var callback = function(error, result) {
               if (error != null) {
                 reject(error);
               } else {
@@ -93,9 +93,9 @@ var SolidityEvent = require("web3/lib/web3/event.js");
         });
       };
     },
-    synchronizeFunction: function (fn, instance, C) {
+    synchronizeFunction: function(fn, instance, C) {
       var self = this;
-      return function () {
+      return function() {
         var args = Array.prototype.slice.call(arguments);
         var tx_params = {};
         var last_arg = args[args.length - 1];
@@ -107,9 +107,9 @@ var SolidityEvent = require("web3/lib/web3/event.js");
 
         tx_params = Utils.merge(C.class_defaults, tx_params);
 
-        return C.detectNetwork().then(function (network_id) {
-          return new Promise(function (accept, reject) {
-            var callback = function (error, tx) {
+        return C.detectNetwork().then(function(network_id) {
+          return new Promise(function(accept, reject) {
+            var callback = function(error, tx) {
               if (error != null) {
                 reject(error);
                 return;
@@ -118,8 +118,8 @@ var SolidityEvent = require("web3/lib/web3/event.js");
               var timeout = C.synchronization_timeout || 240000;
               var start = new Date().getTime();
 
-              var make_attempt = function () {
-                C.web3.eth.getTransactionReceipt(tx, function (err, receipt) {
+              var make_attempt = function() {
+                C.web3.eth.getTransactionReceipt(tx, function(err, receipt) {
                   if (err) return reject(err);
 
                   if (receipt != null) {
@@ -191,12 +191,9 @@ var SolidityEvent = require("web3/lib/web3/event.js");
   // Use inheritance to create a clone of this contract,
   // and copy over contract's static functions.
   function mutate(fn) {
-    var temp = function Clone() {
-      this.constructor = temp;
-      return fn.apply(this, arguments);
-    };
+    var temp = function Clone() { this.constructor = temp; return fn.apply(this, arguments); };
 
-    Object.keys(fn).forEach(function (key) {
+    Object.keys(fn).forEach(function(key) {
       temp[key] = fn[key];
     });
 
@@ -209,10 +206,10 @@ var SolidityEvent = require("web3/lib/web3/event.js");
 
   function bootstrap(fn) {
     fn.web3 = new Web3();
-    fn.class_defaults = fn.prototype.defaults || {};
+    fn.class_defaults  = fn.prototype.defaults || {};
 
     // Add our properties.
-    Object.keys(fn._properties).forEach(function (key) {
+    Object.keys(fn._properties).forEach(function(key) {
       fn._addProp(key, fn._properties[key]);
     });
 
@@ -235,7 +232,7 @@ var SolidityEvent = require("web3/lib/web3/event.js");
 
   Contract.currentProvider = null;
 
-  Contract.setProvider = function (provider) {
+  Contract.setProvider = function(provider) {
     if (!provider) {
       throw new Error("Invalid provider passed to setProvider(); provider is " + provider);
     }
@@ -245,7 +242,7 @@ var SolidityEvent = require("web3/lib/web3/event.js");
     this.currentProvider = provider;
   };
 
-  Contract.new = function () {
+  Contract.new = function() {
     var self = this;
 
     if (this.currentProvider == null) {
@@ -258,16 +255,16 @@ var SolidityEvent = require("web3/lib/web3/event.js");
       throw new Error("{{NAME}} error: contract binary not set. Can't deploy new instance.");
     }
 
-    return self.detectNetwork().then(function (network_id) {
+    return self.detectNetwork().then(function(network_id) {
       // After the network is set, check to make sure everything's ship shape.
       var regex = /__[^_]+_+/g;
       var unlinked_libraries = self.binary.match(regex);
 
       if (unlinked_libraries != null) {
-        unlinked_libraries = unlinked_libraries.map(function (name) {
+        unlinked_libraries = unlinked_libraries.map(function(name) {
           // Remove underscores
           return name.replace(/_/g, "");
-        }).sort().filter(function (name, index, arr) {
+        }).sort().filter(function(name, index, arr) {
           // Remove duplicates
           if (index + 1 >= arr.length) {
             return true;
@@ -278,8 +275,8 @@ var SolidityEvent = require("web3/lib/web3/event.js");
 
         throw new Error("{{NAME}} contains unresolved libraries. You must deploy and link the following libraries before you can deploy a new version of {{NAME}}: " + unlinked_libraries);
       }
-    }).then(function () {
-      return new Promise(function (accept, reject) {
+    }).then(function() {
+      return new Promise(function(accept, reject) {
         var contract_class = self.web3.eth.contract(self.abi);
         var tx_params = {};
         var last_arg = args[args.length - 1];
@@ -297,7 +294,7 @@ var SolidityEvent = require("web3/lib/web3/event.js");
 
         // web3 0.9.0 and above calls new this callback twice.
         // Why, I have no idea...
-        var intermediary = function (err, web3_instance) {
+        var intermediary = function(err, web3_instance) {
           if (err != null) {
             reject(err);
             return;
@@ -314,7 +311,7 @@ var SolidityEvent = require("web3/lib/web3/event.js");
     });
   };
 
-  Contract.at = function (address) {
+  Contract.at = function(address) {
     var self = this;
 
     if (address == null || typeof address != "string" || address.length != 42) {
@@ -324,12 +321,12 @@ var SolidityEvent = require("web3/lib/web3/event.js");
     var contract = new this(address);
 
     // Add thennable to allow people opt into new recommended usage.
-    contract.then = function (fn) {
-      return self.detectNetwork().then(function (network_id) {
+    contract.then = function(fn) {
+      return self.detectNetwork().then(function(network_id) {
         var instance = new self(address);
 
-        return new Promise(function (accept, reject) {
-          self.web3.eth.getCode(address, function (err, code) {
+        return new Promise(function(accept, reject) {
+          self.web3.eth.getCode(address, function(err, code) {
             if (err) return reject(err);
 
             if (!code || new BigNumber(code).eq(0)) {
@@ -345,13 +342,13 @@ var SolidityEvent = require("web3/lib/web3/event.js");
     return contract;
   };
 
-  Contract.deployed = function () {
+  Contract.deployed = function() {
     var self = this;
     var contract = this.at(this.address);
 
     // Add thennable to allow people to opt into new recommended usage.
-    contract.then = function (fn) {
-      return self.detectNetwork().then(function (network_id) {
+    contract.then = function(fn) {
+      return self.detectNetwork().then(function(network_id) {
         if (!self.isDeployedToNetwork(network_id)) {
           throw new Error(self.contract_name + " has not been deployed to detected network: " + network_id);
         }
@@ -362,7 +359,7 @@ var SolidityEvent = require("web3/lib/web3/event.js");
     return contract;
   };
 
-  Contract.defaults = function (class_defaults) {
+  Contract.defaults = function(class_defaults) {
     if (this.class_defaults == null) {
       this.class_defaults = {};
     }
@@ -372,7 +369,7 @@ var SolidityEvent = require("web3/lib/web3/event.js");
     }
 
     var self = this;
-    Object.keys(class_defaults).forEach(function (key) {
+    Object.keys(class_defaults).forEach(function(key) {
       var value = class_defaults[key];
       self.class_defaults[key] = value;
     });
@@ -380,7 +377,7 @@ var SolidityEvent = require("web3/lib/web3/event.js");
     return this.class_defaults;
   };
 
-  Contract.extend = function () {
+  Contract.extend = function() {
     var args = Array.prototype.slice.call(arguments);
 
     for (var i = 0; i < arguments.length; i++) {
@@ -394,29 +391,25 @@ var SolidityEvent = require("web3/lib/web3/event.js");
     }
   };
 
-  Contract.all_networks = {
-    {
-      ALL_NETWORKS
-    }
-  };
+  Contract.all_networks = {{ALL_NETWORKS}};
 
-  Contract.hasNetwork = function (network_id) {
+  Contract.hasNetwork = function(network_id) {
     return this.all_networks[network_id] != null;
   };
 
-  Contract.isDeployedToNetwork = function (network_id) {
+  Contract.isDeployedToNetwork = function(network_id) {
     return this.all_networks[network_id] != null && this.all_networks[network_id].address != null;
   };
 
-  Contract.detectNetwork = function () {
+  Contract.detectNetwork = function() {
     var self = this;
 
-    return new Promise(function (accept, reject) {
+    return new Promise(function(accept, reject) {
       if (this.network_id != null) {
         return accept(this.network_id);
       }
 
-      self.web3.version.getNetwork(function (err, result) {
+      self.web3.version.getNetwork(function(err, result) {
         if (err) return reject(err);
 
         var network_id = result.toString();
@@ -431,16 +424,16 @@ var SolidityEvent = require("web3/lib/web3/event.js");
     });
   };
 
-  Contract.setNetwork = function (network_id) {
+  Contract.setNetwork = function(network_id) {
     if (!network_id) return;
     this.network_id = network_id + "";
   };
 
-  Contract.networks = function () {
+  Contract.networks = function() {
     return Object.keys(this.all_networks);
   };
 
-  Contract.link = function (name, address) {
+  Contract.link = function(name, address) {
     var self = this;
 
     if (typeof name == "function") {
@@ -453,7 +446,7 @@ var SolidityEvent = require("web3/lib/web3/event.js");
       this.link(contract.contract_name, contract.address);
 
       // Merge events so this contract knows about library's events
-      Object.keys(contract.events).forEach(function (topic) {
+      Object.keys(contract.events).forEach(function(topic) {
         self.network.events[topic] = contract.events[topic];
       });
 
@@ -462,7 +455,7 @@ var SolidityEvent = require("web3/lib/web3/event.js");
 
     if (typeof name == "object") {
       var obj = name;
-      Object.keys(obj).forEach(function (name) {
+      Object.keys(obj).forEach(function(name) {
         var a = obj[name];
         self.link(name, a);
       });
@@ -473,17 +466,17 @@ var SolidityEvent = require("web3/lib/web3/event.js");
   };
 
   Contract._property_values = {};
-  Contract._addProp = function (key, fn) {
+  Contract._addProp = function(key, fn) {
     var self = this;
 
     var writable = {
       "address": true
     };
 
-    var getter = function () {
+    var getter = function() {
       return self._property_values[key] || fn.call(self);
     }
-    var setter = function (val) {
+    var setter = function(val) {
       if (writable[key] !== true) {
         throw new Error(key + " property is immutable");
       }
@@ -502,21 +495,17 @@ var SolidityEvent = require("web3/lib/web3/event.js");
 
   // Getter functions are scoped to Contract object.
   Contract._properties = {
-    contract_name: function () {
+    contract_name: function() {
       return "{{NAME}}";
     },
-    abi: function () {
-      return {
-        {
-          ABI
-        }
-      };
+    abi: function() {
+      return {{ABI}};
     },
-    network: function () {
+    network: function() {
       var network_id = this.network_id != null ? this.network_id : this.default_network;
       return this.all_networks[network_id] || {};
     },
-    address: function () {
+    address: function() {
       var address = this.network.address;
 
       if (address == null) {
@@ -525,17 +514,17 @@ var SolidityEvent = require("web3/lib/web3/event.js");
 
       return address;
     },
-    links: function () {
+    links: function() {
       return this.network.links || {};
     },
-    events: function () {
+    events: function() {
       return this.network.events || {};
     },
-    binary: function () {
+    binary: function() {
       var self = this;
       var binary = this.unlinked_binary;
 
-      Object.keys(this.links).forEach(function (library_name) {
+      Object.keys(this.links).forEach(function(library_name) {
         var library_address = self.links[library_name];
         var regex = new RegExp("__" + library_name + "_*", "g");
 
@@ -544,16 +533,16 @@ var SolidityEvent = require("web3/lib/web3/event.js");
 
       return binary;
     },
-    unlinked_binary: function () {
+    unlinked_binary: function() {
       return "{{UNLINKED_BINARY}}";
     },
-    generated_with: function () {
+    generated_with: function() {
       return "{{PUDDING_VERSION}}";
     },
-    default_network: function () {
+    default_network: function() {
       return "{{DEFAULT_NETWORK}}";
     },
-    updated_at: function () {
+    updated_at: function() {
       return "{{UPDATED_AT}}";
     }
   };
