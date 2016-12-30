@@ -355,7 +355,7 @@ var SolidityEvent = require("web3/lib/web3/event.js");
       return callback();
     }
 
-    this.web3.version.network(function(err, result) {
+    this.web3.version.getNetwork(function(err, result) {
       if (err) return callback(err);
 
       var network_id = result.toString();
