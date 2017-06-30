@@ -20,7 +20,7 @@ Artifactor.prototype.save = function(options, extra_options) {
     var filename = path.resolve(path.join(self.contracts_build_directory, options.contract_name + ".json"));
 
     fs.readFile(filename, {encoding: "utf8"}, function(err, json) {
-      // No need to handle the error. If the file doesn"t exist then we"ll start afresh
+      // No need to handle the error. If the file doesn't exist then we'll start afresh
       // with a new binary (see generateBinary()).
       var existing_binary;
 
