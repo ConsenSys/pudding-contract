@@ -1,7 +1,7 @@
-var Schema = require('truffle-contract-schema');
-var fs = require('fs-extra');
-var path = require('path');
-var async = require('async');
+var Schema = require("truffle-contract-schema");
+var fs = require("fs-extra");
+var path = require("path");
+var async = require("async");
 
 function Artifactor(contracts_build_directory) {
   this.contracts_build_directory = contracts_build_directory;
@@ -14,13 +14,13 @@ Artifactor.prototype.save = function(options, extra_options) {
     options = Schema.normalizeOptions(options, extra_options);
 
     if (options.contract_name === null) {
-      return reject('You must specify a contract name.');
+      return reject("You must specify a contract name.");
     }
 
-    var filename = path.resolve(path.join(self.contracts_build_directory, options.contract_name + '.json'));
+    var filename = path.resolve(path.join(self.contracts_build_directory, options.contract_name + ".json"));
 
-    fs.readFile(filename, {encoding: 'utf8'}, function(err, json) {
-      // No need to handle the error. If the file doesn't exist then we'll start afresh
+    fs.readFile(filename, {encoding: "utf8"}, function(err, json) {
+      // No need to handle the error. If the file doesn"t exist then we"ll start afresh
       // with a new binary (see generateBinary()).
       var existing_binary;
 
@@ -39,10 +39,8 @@ Artifactor.prototype.save = function(options, extra_options) {
         return reject(e);
       }
 
-      fs.outputFile(filename, JSON.stringify(final_binary, null, 2), 'utf8', function(err) {
-        if (err) {
-          return reject(err);
-        }
+      fs.outputFile(filename, JSON.stringify(final_binary, null, 2), "utf8", function(err) {
+        if (err) return reject(err);
         accept();
       });
     });
@@ -65,9 +63,8 @@ Artifactor.prototype.saveAll = function(contracts, options) {
     var destination = self.contracts_build_directory;
 
     fs.stat(destination, function(err) {
-      if (err) {
-        return reject(new Error('Desination ' + destination + ' doesn\'t exist!'));
-      }
+      if (err) return reject(new Error("Desination " + destination + " doesn't exist!"));
+
 
       async.each(Object.keys(contracts), function(contract_name, done) {
         var contract_data = contracts[contract_name];
@@ -76,9 +73,7 @@ Artifactor.prototype.saveAll = function(contracts, options) {
         // Finally save the contract.
         self.save(contract_data).then(done).catch(done);
       }, function(err) {
-        if (err) {
-          return reject(err);
-        }
+        if (err) return reject(err);
         accept();
       });
     });
@@ -92,13 +87,13 @@ Artifactor.prototype.generate = function(options, extra_options) {
     options = Schema.normalizeOptions(options, extra_options);
 
     if (options.contract_name === null) {
-      return reject('You must specify a contract name.');
+      return reject("You must specify a contract name.");
     }
 
-    var filename = path.resolve(path.join(self.contracts_build_directory, options.contract_name + '.json'));
+    var filename = path.resolve(path.join(self.contracts_build_directory, options.contract_name + ".json"));
 
-    fs.readFile(filename, {encoding: 'utf8'}, function(err, json) {
-      // No need to handle the error. If the file doesn't exist then we'll start afresh
+    fs.readFile(filename, {encoding: "utf8"}, function(err, json) {
+      // No need to handle the error. If the file doesn"t exist then we"ll start afresh
       // with a new binary (see generateBinary()).
       var existing_binary;
 
@@ -118,12 +113,6 @@ Artifactor.prototype.generate = function(options, extra_options) {
       }
       return accept(final_binary);
 
-      // fs.outputFile(filename, JSON.stringify(final_binary, null, 2), 'utf8', function(err) {
-      //   if (err) {
-      //     return reject(err);
-      //   }
-      //   accept();
-      // });
     });
   });
 };
