@@ -70,25 +70,6 @@ The artifactor uses [truffle-contract](https://github.com/trufflesuite/truffle-c
 $ npm install truffle-artifactor
 ```
 
-### Example
-
-Here, we'll generate a `.sol.js` files given a JSON object like [truffle-schema](https://github.com/trufflesuite/truffle-schema). This will give us a file which we can later `require` into other projects and contexts.
-
-```javascript
-var artifactor = require("truffle-artifactor");
-
-// See truffle-schema for more info: https://github.com/trufflesuite/truffle-schema
-var contract_data = {
-  abi: ...,              // Array; required.
-  unlinked_binary: "..." // String; optional.
-  address: "..."         // String; optional.
-};
-
-artifactor.save(contract_data, "./MyContract.sol.js").then(function() {
-  // The file ./MyContract.sol.js now exists, which you can
-  // import into your project like any other Javascript file.
-});
-```
 # API
 
 #### `artifactor.save(options, filename[, extra_options])`
