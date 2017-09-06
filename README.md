@@ -35,7 +35,8 @@ artifactor.save({
 
 Later...
 ```javascript
-const MyContract = require("./MyContract.json");
+var contract = require("truffle-contract");
+const MyContract = contract(require("./MyContract.json"));
 MyContract.setProvider(myWeb3Provider);
 MyContract.deployed().then((instance) => {
   return instance.doStuff(); // <-- matches the doStuff() function within MyContract.sol.
