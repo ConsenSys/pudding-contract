@@ -35,12 +35,12 @@ artifactor.save({
 
 Later...
 ```javascript
-var MyContract = require("./MyContract.json");
+const MyContract = require("./MyContract.json");
 MyContract.setProvider(myWeb3Provider);
-MyContract.deployed().then(function(instance) {
+MyContract.deployed().then((instance) => {
   return instance.doStuff(); // <-- matches the doStuff() function within MyContract.sol.
-}).then(function(result) {
-  // We just made a transaction, and it's been mined!
+}).then((result) => {
+  // We just made a transaction, and it"s been mined!
   // We're given transaction hash, logs (events) and receipt for further processing.
   console.log(result.tx, result.logs, result.receipt);
 });
