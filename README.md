@@ -1,5 +1,7 @@
 # truffle-artifactor (formerly ether-pudding)
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/trufflesuite/truffle-artifactor.svg)](https://greenkeeper.io/)
+
 This package saves contract artifacts into into Javascript files that can be `require`'d. i.e.,
 
 ```javascript
