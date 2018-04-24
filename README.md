@@ -3,16 +3,45 @@
 This package saves contract artifacts into into Javascript files that can be `require`'d. i.e.,
 
 ```javascript
-var artifactor = require("truffle-artifactor");
-artifactor.save({/*...*/}, "./MyContract.sol.js") // => a promise
+const Artifactor = require("truffle-artifactor");
+const path = require("path");
+const solc = require("solc");
+const fs = require("fs");
 
-// Later...
-var MyContract = require("./MyContract.sol.js");
+// Compile first
+const result = solc.compile(fs.readFileSync("./MyContract.sol", { encoding: "utf8" }), 1);
+
+// Clean up after solidity. Only remove solidity"s listener, which happens to be the first.
+process.removeListener("uncaughtException", process.listeners("uncaughtException")[0]);
+
+const compiled = result.contracts[":MyContract"]; // not sure why this is getting prepended with :
+const abi = JSON.parse(compiled.interface);
+const binary = compiled.bytecode;
+
+// Setup
+const dirPath = path.resolve("./");
+const expectedFilepath = path.join(dirPath, "MyContract.json");
+const artifactor = new Artifactor(dirPath);
+
+artifactor.save({
+  contract_name: "MyContract",
+  abi,
+  binary,
+  network_id: 3,
+}).then(() => {
+  console.log("Contract Saved!")
+})
+```
+
+Later...
+```javascript
+var contract = require("truffle-contract");
+const MyContract = contract(require("./MyContract.json"));
 MyContract.setProvider(myWeb3Provider);
-MyContract.deployed().then(function(instance) {
+MyContract.deployed().then((instance) => {
   return instance.doStuff(); // <-- matches the doStuff() function within MyContract.sol.
-}).then(function(result) {
-  // We just made a transaction, and it's been mined!
+}).then((result) => {
+  // We just made a transaction, and it"s been mined!
   // We're given transaction hash, logs (events) and receipt for further processing.
   console.log(result.tx, result.logs, result.receipt);
 });
@@ -41,25 +70,6 @@ The artifactor uses [truffle-contract](https://github.com/trufflesuite/truffle-c
 $ npm install truffle-artifactor
 ```
 
-### Example
-
-Here, we'll generate a `.sol.js` files given a JSON object like [truffle-schema](https://github.com/trufflesuite/truffle-schema). This will give us a file which we can later `require` into other projects and contexts.
-
-```javascript
-var artifactor = require("truffle-artifactor");
-
-// See truffle-schema for more info: https://github.com/trufflesuite/truffle-schema
-var contract_data = {
-  abi: ...,              // Array; required.
-  unlinked_binary: "..." // String; optional.
-  address: "..."         // String; optional.
-};
-
-artifactor.save(contract_data, "./MyContract.sol.js").then(function() {
-  // The file ./MyContract.sol.js now exists, which you can
-  // import into your project like any other Javascript file.
-});
-```
 # API
 
 #### `artifactor.save(options, filename[, extra_options])`
