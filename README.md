@@ -1,6 +1,6 @@
 # truffle-artifactor (formerly ether-pudding)
 
-This package saves contract artifacts into into Javascript files that can be `require`'d. i.e.,
+This package saves contract artifacts into Javascript files that can be `require`'d. i.e.,
 
 ```javascript
 var artifactor = require("truffle-artifactor");
