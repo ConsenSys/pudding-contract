@@ -82,7 +82,7 @@ Artifactor.prototype.saveAll = function(objects) {
   return new Promise(function(accept, reject) {
     fs.stat(self.destination, function(err, stat) {
       if (err) {
-        return reject(new Error("Desination " + self.destination + " doesn't exist!"));
+        return reject(new Error("Destination " + self.destination + " doesn't exist!"));
       }
       accept();
     });
